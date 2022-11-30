@@ -1,0 +1,4 @@
+.idea/
+
+# 텔레그램 API 토큰파일
+token.json
