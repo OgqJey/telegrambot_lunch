@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def open_token():
     with open('token.json', 'r') as token_file:
         token_data = json.load(token_file)
-        # return token_data['prod']
-        return token_data['dev']
+        return token_data['prod']
+        # return token_data['dev']
 
 
 def get_weather_text(weather):
