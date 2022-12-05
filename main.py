@@ -21,8 +21,21 @@ def open_token():
         return token_data['dev']
 
 
+def get_weather_text(weather):
+    # weather = get_weather()
+    if weather is not None:
+        temperature = weather['temperature']
+        cast = weather['cast']
+        emoji = weather_emoji(cast)
+        dust = weather['dust']
+        weather_txt = f'현재 기온: {temperature}°. \n날씨: {cast}{emoji} / 미세먼지: {dust}'
+        return weather_txt
+    else:
+        return None
+
+
 def get_weather():
-    weather = ''
+    weather = {}
     오지큐주소 = '서울도곡동'
     url = f'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query={오지큐주소}날씨'
     response = requests.get(url)
@@ -43,20 +56,20 @@ def get_weather():
             temperature_txt = temperature_info[0].text.strip()  # '현재기온15.5도'
             # print(temperature_txt)
             temperature_txt = re.sub(r'[^0-9`.-]', '', temperature_txt)  # '15.5'
-            현재기온  = float(temperature_txt)  # 15.5
-            # print('temperature', temperature)
+            현재기온 = float(temperature_txt)  # 15.5
+            # print('temperature', 현재기온)
             날씨 = cast_text[0].text.strip()  # 맑음, 흐림 등
-            emoji = weather_emoji(날씨)
-            # print('cast', cast)
+            # print('cast', 날씨)
             미세먼지 = ''
-            if dust.find('보통'):
+            if dust.find('보통') > -1:
                 미세먼지 = '보통'
-            elif dust.find('나쁨'):
+            elif dust.find('나쁨') > -1:
                 미세먼지 = '나쁨'
-            elif dust.find('좋음'):
+            elif dust.find('좋음') > -1:
                 미세먼지 = '좋음'
-            weather = f'현재 기온: {현재기온}°. \n날씨: {날씨}{emoji} / 미세먼지: {미세먼지}'
-            # print('weather', weather)
+            weather['temperature'] = 현재기온
+            weather['cast'] = 날씨
+            weather['dust'] = 미세먼지
             return weather
     else:
         return None
@@ -66,13 +79,100 @@ def weather_emoji(cast):
     emoji = ''
     if cast == '맑음':
         emoji = '☀️'
-    elif cast.find('흐림'):
+    elif cast.find('흐림') > -1:
         emoji = '☁️'
-    elif cast.find('비'):
+    elif cast.find('비') > -1:
         emoji = '🌧'
-    elif cast.find('눈'):
+    elif cast.find('눈') > -1:
         emoji = '🌨'
     return emoji
+
+
+def bad_weather(cast):
+    if cast.find('비') > -1 or cast.find('눈') > -1:
+        return True
+    else:
+        return False
+
+
+def select_weather_menu(update: Update, context: CallbackContext):
+    query = update.callback_query
+    data = query.data
+    today = datetime.today().strftime("%Y-%m-%d")
+    user_name = make_user_name(update)
+    weather = get_weather()
+    print('weather', weather)
+    weather_txt = get_weather_text(weather)
+    temperature = weather['temperature']
+    cast = weather['cast']
+    dust = weather['dust']
+    is_bad_weather = bad_weather(cast)
+    menu_list = []
+    추가메세지 = ''
+    delivery = 10
+    if temperature < 0:
+        if is_bad_weather:
+            if dust.find('나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 3))
+                delivery = 60
+                추가메세지 = '춥고 궂은 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 3))
+                delivery = 40
+        else:
+            if dust.find('매우나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 350
+                                  and not item['temperature_category'] == 3))
+                delivery = 30
+                추가메세지 = '미세먼지 심한 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 500
+                                  and not item['temperature_category'] == 3))
+                delivery = 10
+                추가메세지 = ''
+    elif temperature > 28:
+        if is_bad_weather:
+            if dust.find('나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250))
+                delivery = 50
+                추가메세지 = '덥고 궂은 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 350
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 2))
+                delivery = 20
+        else:
+            if dust.find('매우나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['temperature_category'] == 2))
+                delivery = 10
+                추가메세지 = '미세먼지 심한 '
+    else:
+        menu_list = menus
+
+    delivery_submit = random.randrange(0, 100)
+    print('delivery', delivery)
+    print('delivery_submit', delivery_submit)
+    if delivery_submit < delivery:
+        context.bot.sendMessage(
+            text=f'*********** {today} ***********\n{weather_txt}\n\n오늘 같은 {추가메세지}날씨엔 배달은 어떠신가요?',
+            chat_id=str(query.message.chat.id)
+        )
+    else:
+        menu = menu_choice(menu_list)  # 랜덤으로 메뉴를 뽑는다
+        weight = menu['weight']
+        if weight < 100:  # 메뉴의 가중치가 100보다 작으면 확률 굴림을 한다
+            submit = random.randrange(0, 100)
+            if weight < submit:
+                print('승인 실패: ', menu)
+                menu = menu_choice(menu_list)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다(2번 연속 뽑혔다면 운명 이겠지)
+        name = menu['name']
+        url = menu['url']
+        context.bot.sendMessage(
+            text=f'*********** {today} ***********\n{weather_txt}\n\n{user_name}, 오늘 같은 {추가메세지}날씨엔 여기 어떠신가요? \n{name}!\n{url}',
+            chat_id=str(query.message.chat.id)
+        )
 
 
 def echo(update: Update, context: CallbackContext) -> None:
@@ -97,27 +197,31 @@ def make_user_name(update: Update):
     return user_name
 
 
-def select_menu(category):
+def select_category_menu(category):
     menu = ''
     if category == 0:
-        choice = random.randrange(0, len(menus))
-        menu = menus[choice]
+        menu = menu_choice(menus)
     else:
         new_menus = create_new_menus_by_category(category)
-        choice = random.randrange(0, len(new_menus))
-        menu = new_menus[choice]
+        menu = menu_choice(new_menus)
     return menu
 
 
-def random_select(category):
-    menu = select_menu(category)  # 랜덤으로 메뉴를 뽑는다
+def menu_choice(menu_list):
+    choice = random.randrange(0, len(menu_list))
+    menu = menu_list[choice]
+    return menu
+
+
+def random_category_select(category):
+    menu = select_category_menu(category)  # 랜덤으로 메뉴를 뽑는다
     # print('menu', menu)
     weight = menu['weight']
     if weight < 100:  # 메뉴의 가중치가 100보다 작으면 확률 굴림을 한다
         submit = random.randrange(0, 100)
         if weight < submit:
             print('승인 실패: ', menu)
-            menu = select_menu(category)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다(2번 연속 뽑혔다면 운명 이겠지)
+            menu = select_category_menu(category)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다(2번 연속 뽑혔다면 운명 이겠지)
     return menu
 
 
@@ -128,7 +232,7 @@ def create_new_menus_by_category(category):
 def start_command_btn_show(update: Update, context: CallbackContext):
     전체랜덤 = BT(text="오늘 점심은 어디로? (완전 랜덤)", callback_data="start_1")
     카테고리선택 = BT(text="끌리는 종류가 있어요!", callback_data="start_2")
-    날씨별추천 = BT(text="오늘 점심은 어디로?\n날씨를 보고 추천해 드려요", callback_data="start_3")
+    날씨별추천 = BT(text="오늘 점심은 어디로?\n 날씨를 보고 추천해 드려요", callback_data="start_3")
     mu = MU(inline_keyboard=[
         [전체랜덤],
         [날씨별추천],
@@ -177,7 +281,8 @@ def start_command_list_show(update: Update, context: CallbackContext):
 
 
 def start_command_weather_show(update: Update, context: CallbackContext):
-    weather_txt = get_weather()
+    weather = get_weather()
+    weather_txt = get_weather_text(weather)
     if weather_txt is None:
         weather_txt = '날씨 정보를 찾을 수 없습니다'
     context.bot.sendMessage(
@@ -195,7 +300,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
     user_name = make_user_name(update)
 
     if data == 'start_1':
-        menu = random_select(0)
+        menu = random_category_select(0)
         name = menu['name']
         url = menu['url']
         context.bot.sendMessage(
@@ -204,6 +309,8 @@ def start_btn_callback(update: Update, context: CallbackContext):
         )
     elif data == 'start_2':
         category_command_btn_show(update, context)
+    elif data == 'start_3':
+        weather_btn_callback(update, context)
 
 
 def category_btn_callback(update: Update, context: CallbackContext):
@@ -216,33 +323,33 @@ def category_btn_callback(update: Update, context: CallbackContext):
 
     if data == 'category_1':
         category_text = '탕,찌개'
-        menu = random_select(1)
+        menu = random_category_select(1)
     elif data == 'category_2':
         category_text = '돈까스,일식'
-        menu = random_select(2)
+        menu = random_category_select(2)
     elif data == 'category_3':
         category_text = '양식'
-        menu = random_select(3)
+        menu = random_category_select(3)
     elif data == 'category_4':
         category_text = '중식'
-        menu = random_select(4)
+        menu = random_category_select(4)
     elif data == 'category_5':
         category_text = '아시안'
-        menu = random_select(5)
+        menu = random_category_select(5)
     elif data == 'category_6':
         category_text = '백반,국수'
-        menu = random_select(6)
+        menu = random_category_select(6)
     elif data == 'category_7':
         category_text = '분식'
-        menu = random_select(7)
+        menu = random_category_select(7)
     elif data == 'category_8':
         category_text = '패스트푸드'
-        menu = random_select(8)
+        menu = random_category_select(8)
 
     name = menu['name']
     url = menu['url']
     context.bot.sendMessage(
-        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}이 선택한 오늘의 점심은~ \n{name}!\n{url}',
+        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}님을 위해 선택한 오늘의 점심은~ \n{name}!\n{url}',
         chat_id=str(query.message.chat.id)
     )
 
@@ -251,6 +358,7 @@ def weather_btn_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
     today = datetime.today().strftime("%Y-%m-%d")
+    select_weather_menu(update, context)
 
 
 def button_callback_handler(update: Update, context: CallbackContext) -> None:
