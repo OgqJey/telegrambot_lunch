@@ -232,7 +232,7 @@ def create_new_menus_by_category(category):
 def start_command_btn_show(update: Update, context: CallbackContext):
     전체랜덤 = BT(text="오늘 점심은 어디로? (완전 랜덤)", callback_data="start_1")
     카테고리선택 = BT(text="끌리는 종류가 있어요!", callback_data="start_2")
-    날씨별추천 = BT(text="오늘 점심은 어디로?\n 날씨를 보고 추천해 드려요", callback_data="start_3")
+    날씨별추천 = BT(text="🌏 날씨를 보고 추천해 드려요 🌏", callback_data="start_3")
     mu = MU(inline_keyboard=[
         [전체랜덤],
         [날씨별추천],
