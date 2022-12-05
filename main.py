@@ -1,6 +1,9 @@
 from telegram import Bot, BotCommand, Update, InlineKeyboardButton as BT, InlineKeyboardMarkup as MU
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 from datetime import datetime
+import re
+import requests
+from bs4 import BeautifulSoup
 from menu import *
 import json
 import logging
@@ -14,8 +17,62 @@ logger = logging.getLogger(__name__)
 def open_token():
     with open('token.json', 'r') as token_file:
         token_data = json.load(token_file)
-        return token_data['prod']
-        # return token_data['dev']
+        # return token_data['prod']
+        return token_data['dev']
+
+
+def get_weather():
+    weather = ''
+    오지큐주소 = '서울도곡동'
+    url = f'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query={오지큐주소}날씨'
+    response = requests.get(url)
+    bs = BeautifulSoup(response.text, "lxml")
+    # print('bs', bs)
+    weather_info = bs.select("div._today")
+    # print('weather_info', weather_info)
+
+    if len(weather_info) > 0:
+        temperature_info = bs.select("div.temperature_text > strong")
+        # print('temperature_info', temperature_info)
+        cast_text = bs.select("div.weather_main")
+        # print('cast_text', cast_text)
+        dust = bs.select("ul.today_chart_list")[1].text.strip()
+        # print(미세먼지)
+
+        if len(temperature_info) > 0 and len(cast_text) > 0:
+            temperature_txt = temperature_info[0].text.strip()  # '현재기온15.5도'
+            # print(temperature_txt)
+            temperature_txt = re.sub(r'[^0-9`.-]', '', temperature_txt)  # '15.5'
+            현재기온  = float(temperature_txt)  # 15.5
+            # print('temperature', temperature)
+            날씨 = cast_text[0].text.strip()  # 맑음, 흐림 등
+            emoji = weather_emoji(날씨)
+            # print('cast', cast)
+            미세먼지 = ''
+            if dust.find('보통'):
+                미세먼지 = '보통'
+            elif dust.find('나쁨'):
+                미세먼지 = '나쁨'
+            elif dust.find('좋음'):
+                미세먼지 = '좋음'
+            weather = f'현재 기온: {현재기온}°. \n날씨: {날씨}{emoji} / 미세먼지: {미세먼지}'
+            # print('weather', weather)
+            return weather
+    else:
+        return None
+
+
+def weather_emoji(cast):
+    emoji = ''
+    if cast == '맑음':
+        emoji = '☀️'
+    elif cast.find('흐림'):
+        emoji = '☁️'
+    elif cast.find('비'):
+        emoji = '🌧'
+    elif cast.find('눈'):
+        emoji = '🌨'
+    return emoji
 
 
 def echo(update: Update, context: CallbackContext) -> None:
@@ -46,7 +103,7 @@ def select_menu(category):
         choice = random.randrange(0, len(menus))
         menu = menus[choice]
     else:
-        new_menus = create_new_menus(category)
+        new_menus = create_new_menus_by_category(category)
         choice = random.randrange(0, len(new_menus))
         menu = new_menus[choice]
     return menu
@@ -64,15 +121,17 @@ def random_select(category):
     return menu
 
 
-def create_new_menus(category):
+def create_new_menus_by_category(category):
     return list((item for item in menus if item['category'] == category))
 
 
 def start_command_btn_show(update: Update, context: CallbackContext):
     전체랜덤 = BT(text="오늘 점심은 어디로? (완전 랜덤)", callback_data="start_1")
     카테고리선택 = BT(text="끌리는 종류가 있어요!", callback_data="start_2")
+    날씨별추천 = BT(text="오늘 점심은 어디로?\n날씨를 보고 추천해 드려요", callback_data="start_3")
     mu = MU(inline_keyboard=[
         [전체랜덤],
+        [날씨별추천],
         [카테고리선택]
     ])
 
@@ -117,6 +176,16 @@ def start_command_list_show(update: Update, context: CallbackContext):
     )
 
 
+def start_command_weather_show(update: Update, context: CallbackContext):
+    weather_txt = get_weather()
+    if weather_txt is None:
+        weather_txt = '날씨 정보를 찾을 수 없습니다'
+    context.bot.sendMessage(
+        text=f'{weather_txt}',
+        chat_id=str(update.message.chat.id)
+    )
+
+
 def start_btn_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
@@ -130,7 +199,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
         name = menu['name']
         url = menu['url']
         context.bot.sendMessage(
-            text=f'************ 완전 무작위! ************\n{today}\n{user_name}이 선택한 오늘의 점심은~ \n{name}!\n{url}',
+            text=f'************ 완전 무작위! ************\n{today}\n점심 추천봇이 {user_name}님께 추천하는 오늘의 점심은~ \n{name}!\n{url}',
             chat_id=str(query.message.chat.id)
         )
     elif data == 'start_2':
@@ -178,6 +247,12 @@ def category_btn_callback(update: Update, context: CallbackContext):
     )
 
 
+def weather_btn_callback(update: Update, context: CallbackContext):
+    query = update.callback_query
+    data = query.data
+    today = datetime.today().strftime("%Y-%m-%d")
+
+
 def button_callback_handler(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     data = query.data
@@ -186,6 +261,8 @@ def button_callback_handler(update: Update, context: CallbackContext) -> None:
         start_btn_callback(update, context)
     elif data.find('category') > -1:
         category_btn_callback(update, context)
+    elif data.find('weather') > -1:
+        weather_btn_callback(update, context)
     else:
         context.bot.sendMessage(
             text='안녕히가세요',
@@ -204,6 +281,7 @@ def main():
     # dispatcher.add_handler(MessageHandler(Filters.text, echo)) # 메시지 핸들러 (유저의 일반 채팅에 반응 하므로 여기선 사용 안함)
     dispatcher.add_handler(CommandHandler('start', start_command_btn_show))  # 커맨드 핸들러
     dispatcher.add_handler(CommandHandler('list', start_command_list_show))  # 커맨드 핸들러
+    dispatcher.add_handler(CommandHandler('weather', start_command_weather_show))  # 커맨드 핸들러
     dispatcher.add_handler(CallbackQueryHandler(button_callback_handler))  # 버튼 클릭 핸들러
     updater.start_polling()
     updater.idle()
