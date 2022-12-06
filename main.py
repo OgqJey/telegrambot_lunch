@@ -152,8 +152,8 @@ def select_weather_menu(update: Update, context: CallbackContext):
         menu_list = menus
 
     delivery_submit = random.randrange(0, 100)
-    print('delivery', delivery)
-    print('delivery_submit', delivery_submit)
+    # print('delivery', delivery)
+    # print('delivery_submit', delivery_submit)
     if delivery_submit < delivery:
         context.bot.sendMessage(
             text=f'*********** {today} ***********\n{weather_txt}\n\n오늘 같은 {추가메세지}날씨엔 배달은 어떠신가요?',
@@ -190,7 +190,7 @@ def make_user_name(update: Update):
 
     user_name = last_name + first_name
     if len(user_name) < 1:
-        user_name = '점심추천봇'
+        user_name = '사용자님'
     else:
         user_name = user_name + '님'
 
@@ -304,7 +304,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
         name = menu['name']
         url = menu['url']
         context.bot.sendMessage(
-            text=f'************ 완전 무작위! ************\n{today}\n점심 추천봇이 {user_name}님께 추천하는 오늘의 점심은~ \n{name}!\n{url}',
+            text=f'************ 완전 무작위! ************\n{today}\n점심 추천봇이 {user_name}께 추천하는 오늘의 점심은~ \n{name}!\n{url}',
             chat_id=str(query.message.chat.id)
         )
     elif data == 'start_2':
@@ -349,7 +349,7 @@ def category_btn_callback(update: Update, context: CallbackContext):
     name = menu['name']
     url = menu['url']
     context.bot.sendMessage(
-        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}님을 위해 선택한 오늘의 점심은~ \n{name}!\n{url}',
+        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}을 위해 선택한 오늘의 점심은~ \n{name}!\n{url}',
         chat_id=str(query.message.chat.id)
     )
 
