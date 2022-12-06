@@ -49,8 +49,8 @@ def get_weather():
         # print('temperature_info', temperature_info)
         cast_text = bs.select("div.weather_main")
         # print('cast_text', cast_text)
-        dust = bs.select("ul.today_chart_list")[1].text.strip()
-        # print(미세먼지)
+        dust = bs.select("ul.today_chart_list")[0].text.strip()
+        # print(dust)
 
         if len(temperature_info) > 0 and len(cast_text) > 0:
             temperature_txt = temperature_info[0].text.strip()  # '현재기온15.5도'
@@ -166,7 +166,7 @@ def select_weather_menu(update: Update, context: CallbackContext):
             submit = random.randrange(0, 100)
             if weight < submit:
                 print('승인 실패: ', menu)
-                menu = menu_choice(menu_list)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다(2번 연속 뽑혔다면 운명 이겠지)
+                menu = menu_choice(menu_list)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다
         name = menu['name']
         url = menu['url']
         context.bot.sendMessage(
