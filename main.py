@@ -80,6 +80,8 @@ def weather_emoji(cast):
     if cast == '맑음':
         emoji = '☀️'
     elif cast.find('흐림') > -1:
+        emoji = '⛅️️'
+    elif cast.find('구름많음') > -1:
         emoji = '☁️'
     elif cast.find('비') > -1:
         emoji = '🌧'
