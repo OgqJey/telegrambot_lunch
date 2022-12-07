@@ -109,7 +109,7 @@ def select_weather_menu(update: Update, context: CallbackContext):
     is_bad_weather = bad_weather(cast)
     menu_list = []
     추가메세지 = ''
-    delivery = 10
+    delivery = 2
     if temperature < 4:
         if is_bad_weather:
             if dust.find('나쁨') > -1:
