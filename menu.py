@@ -364,6 +364,16 @@ menus = [
         "weather_category": 4,
         "temperature_category": 1,
         "distance": 319
+    },
+{
+        "id": 31,
+        "name": "분식문방구",
+        "url": "https://map.naver.com/v5/entry/place/1980277788",
+        "weight": 60,
+        "category": 7,
+        "weather_category": 4,
+        "temperature_category": 1,
+        "distance": 261 + 50
     }
 ]
 
