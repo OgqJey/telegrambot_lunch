@@ -73,7 +73,8 @@ menus = [
         "category": 8,
         "weather_category": 1,
         "temperature_category": 3,
-        "distance": 131
+        "distance": 131,
+        "message": "가까운 곳에서 간단하게, ",
     },
     {
         "id": 2,
@@ -83,27 +84,30 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 53
+        "distance": 53,
+        "message": "가까운, ",
     },
     {
         "id": 3,
-        "name": "진대감(파김치전골 등)",
+        "name": "진대감",
         "url": "https://map.naver.com/v5/entry/place/33741142",
         "weight": 100,
         "category": 1,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 207
+        "distance": 207,
+        "message": "파김치전골 맛집, ",
     },
     {
         "id": 4,
-        "name": "사위식당(낙곱새)",
+        "name": "사위식당",
         "url": "https://map.naver.com/v5/entry/place/1701793098",
         "weight": 80,
         "category": 1,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 242
+        "distance": 242,
+        "message": "오랜만에 낙곱새는 어떠신가요? ",
     },
     {
         "id": 5,
@@ -113,7 +117,8 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 213
+        "distance": 213,
+        "message": "순두부찌개, 보쌈정식 맛집. ",
     },
     {
         "id": 6,
@@ -123,17 +128,19 @@ menus = [
         "category": 6,
         "weather_category": 2,
         "temperature_category": 2,
-        "distance": 320
+        "distance": 320,
+        "message": "푸짐하고 만두가 맛있는 ",
     },
     {
         "id": 7,
-        "name": "여민락(쌈밥)",
+        "name": "여민락",
         "url": "https://map.naver.com/v5/entry/place/18548850",
         "weight": 90,
         "category": 6,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 348
+        "distance": 348,
+        "message": "쌈채소가 풍부하게 나오는 쌈밥집. ",
     },
     {
         "id": 8,
@@ -143,7 +150,8 @@ menus = [
         "category": 2,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 233
+        "distance": 233,
+        "message": "언제나 대기가 있는 진짜 맛집! ",
     },
     {
         "id": 9,
@@ -153,7 +161,8 @@ menus = [
         "category": 1,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 86
+        "distance": 86,
+        "message": "항상 줄서 있는 뼈해장국 맛집! ",
     },
     {
         "id": 10,
@@ -163,7 +172,8 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 99
+        "distance": 99,
+        "message": "닭곰탕, 닭도리탕 어떠신가요? ",
     },
     {
         "id": 11,
@@ -173,7 +183,8 @@ menus = [
         "category": 1,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 70
+        "distance": 70,
+        "message": "회사에서 가까운 김치찌개 맛집. ",
     },
     {
         "id": 12,
@@ -183,7 +194,8 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 130
+        "distance": 130,
+        "message": "카페같은 분위기의 한식집. ",
     },
     {
         "id": 13,
@@ -193,17 +205,19 @@ menus = [
         "category": 1,
         "weather_category": 4,
         "temperature_category": 3,
-        "distance": 311
+        "distance": 311,
+        "message": "콩나물국밥 말고도 돈까스, 비빔국수가 있는 ",
     },
     {
         "id": 14,
-        "name": "국빈(알짬뽕)",
+        "name": "국빈",
         "url": "https://map.naver.com/v5/entry/place/37417405",
         "weight": 90,
         "category": 4,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 223
+        "distance": 223,
+        "message": "짬뽕 맛집 ",
     },
     {
         "id": 15,
@@ -213,7 +227,8 @@ menus = [
         "category": 6,
         "weather_category": 1,
         "temperature_category": 3,
-        "distance": 352 + 50  # 횡단보도는 50의 추가 값
+        "distance": 352 + 50,
+        "message": "정통 평양식 냉면이 나오는 ",
     },
     {
         "id": 16,
@@ -223,7 +238,8 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 341 + 50  # 횡단보도는 50의 추가 값
+        "distance": 341 + 50,
+        "message": "회사 근처에서 설렁탕을 드신다면 여기로. ",
     },
     {
         "id": 17,
@@ -233,7 +249,8 @@ menus = [
         "category": 5,
         "weather_category": 1,
         "temperature_category": 3,
-        "distance": 340 + 50  # 횡단보도는 50의 추가 값
+        "distance": 340 + 50,
+        "message": "쌀국수 맛집! ",
     },
     {
         "id": 18,
@@ -243,7 +260,8 @@ menus = [
         "category": 8,
         "weather_category": 4,
         "temperature_category": 3,
-        "distance": 357 + 50  # 횡단보도는 50의 추가 값
+        "distance": 357 + 50,
+        "message": "패티에 모든 것을 건 수제버거! ",
     },
     {
         "id": 19,
@@ -253,7 +271,8 @@ menus = [
         "category": 2,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 262 + 50  # 횡단보도는 50의 추가 값
+        "distance": 262 + 50,
+        "message": "여기서 시킬때는 부대전골 추천~ ",
     },
     {
         "id": 20,
@@ -263,7 +282,8 @@ menus = [
         "category": 2,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 319 + 50  # 횡단보도는 50의 추가 값
+        "distance": 319 + 50,
+        "message": "카츠오우에 뒤지지 않는다. ",
     },
     {
         "id": 21,
@@ -273,7 +293,8 @@ menus = [
         "category": 4,
         "weather_category": 2,
         "temperature_category": 1,
-        "distance": 32
+        "distance": 32,
+        "message": "회사에서 가장 가까운 ",
     },
     {
         "id": 22,
@@ -283,57 +304,63 @@ menus = [
         "category": 3,
         "weather_category": 4,
         "temperature_category": 3,
-        "distance": 107 + 50  # 횡단보도는 50의 추가 값
+        "distance": 107 + 50,
+        "message": "파스타는 어때요? ",
     },
     {
         "id": 23,
-        "name": "퀸즈 블러바드(부리또)",
+        "name": "퀸즈 블러바드",
         "url": "https://map.naver.com/v5/entry/place/1156931389",
         "weight": 10,
         "category": 3,
         "weather_category": 4,
         "temperature_category": 3,
-        "distance": 331 + 50  # 횡단보도는 50의 추가 값
+        "distance": 331 + 50,
+        "message": "부리또, 타코가 생각난다면. ",
     },
     {
         "id": 24,
-        "name": "인덕원(비빔국수)",
+        "name": "인덕원",
         "url": "https://map.naver.com/v5/entry/place/1090964067",
         "weight": 80,
         "category": 6,
         "weather_category": 4,
         "temperature_category": 3,
-        "distance": 173 + 50  # 횡단보도는 50의 추가 값
+        "distance": 173 + 50,
+        "message": "비빔국수 맛집. ",
     },
     {
         "id": 25,
-        "name": "고씨네(카레)",
+        "name": "고씨네",
         "url": "https://map.naver.com/v5/entry/place/55737564",
         "weight": 80,
         "category": 2,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 360
+        "distance": 360,
+        "message": "건더기 없는 일본식 카레집. ",
     },
     {
         "id": 26,
-        "name": "생연어집(생선구이)",
+        "name": "생연어집",
         "url": "https://map.naver.com/v5/entry/place/399895808",
         "weight": 80,
         "category": 6,
         "weather_category": 1,
         "temperature_category": 3,
-        "distance": 637 + 100  # 횡단보도는 50의 추가 값. 2번
+        "distance": 637 + 100,
+        "message": "멀지만 또 가고 싶은~ ",
     },
     {
         "id": 27,
-        "name": "순리대로(순대국)",
+        "name": "순리대로",
         "url": "https://map.naver.com/v5/entry/place/1851351813",
         "weight": 90,
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 321
+        "distance": 321,
+        "message": "순대국 어떠신가요? ",
     },
     {
         "id": 28,
@@ -343,17 +370,19 @@ menus = [
         "category": 1,
         "weather_category": 1,
         "temperature_category": 1,
-        "distance": 286
+        "distance": 286,
+        "message": "찌개, 제육볶음, 생선구이 전부 무난한 ",
     },
     {
         "id": 29,
-        "name": "토라도라(라멘)",
+        "name": "토라도라",
         "url": "https://map.naver.com/v5/entry/place/1357006951",
         "weight": 60,
         "category": 2,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 501 + 50  # 횡단보도는 50의 추가 값
+        "distance": 501 + 50,
+        "message": "라멘 맛집(이라네요) ",
     },
     {
         "id": 30,
@@ -363,7 +392,8 @@ menus = [
         "category": 7,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 319
+        "distance": 319,
+        "message": "분식은 어떠신가요? ",
     },
 {
         "id": 31,
@@ -373,7 +403,8 @@ menus = [
         "category": 7,
         "weather_category": 4,
         "temperature_category": 1,
-        "distance": 261 + 50
+        "distance": 261 + 50,
+        "message": "깔끔한 인테리어의 분식집. ",
     }
 ]
 

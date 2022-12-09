@@ -171,9 +171,12 @@ def select_weather_menu(update: Update, context: CallbackContext):
                 menu = menu_choice(menu_list)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다
         name = menu['name']
         url = menu['url']
+        message = menu['message']
         context.bot.sendMessage(
-            text=f'*********** {today} ***********\n{weather_txt}\n\n{user_name}, 오늘 같은 {추가메세지}날씨엔 여기 어떠신가요? \n{name}!\n{url}',
-            chat_id=str(query.message.chat.id)
+            text=f'*********** {today} ***********\n{weather_txt}\n'
+                 f'\n{user_name}, 오늘 같은 {추가메세지}날씨엔 여기 어떠신가요?\n{message}<b>{name}!</b>\n{url}',
+            chat_id=str(query.message.chat.id),
+            parse_mode='Html'
         )
 
 
@@ -305,9 +308,12 @@ def start_btn_callback(update: Update, context: CallbackContext):
         menu = random_category_select(0)
         name = menu['name']
         url = menu['url']
+        message = menu['message']
         context.bot.sendMessage(
-            text=f'************ 완전 무작위! ************\n{today}\n점심 추천봇이 {user_name}께 추천하는 오늘의 점심은~ \n{name}!\n{url}',
-            chat_id=str(query.message.chat.id)
+            text=f'************ 완전 무작위! ************\n{today}'
+                 f'\n점심 추천봇이 {user_name}께 추천하는 오늘의 점심은~ \n{message}<b>{name}!</b>\n{url}',
+            chat_id=str(query.message.chat.id),
+            parse_mode='Html'
         )
     elif data == 'start_2':
         category_command_btn_show(update, context)
@@ -351,8 +357,10 @@ def category_btn_callback(update: Update, context: CallbackContext):
     name = menu['name']
     url = menu['url']
     context.bot.sendMessage(
-        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}을 위해 선택한 오늘의 점심은~ \n{name}!\n{url}',
-        chat_id=str(query.message.chat.id)
+        text=f'************************************\n{today}\n- {category_text} - 종류 중에서\n{user_name}을 위해 선택한 오늘의 점심은~ \n<b>{name}!</b>\n{url}',
+        chat_id=str(query.message.chat.id),
+        # parse_mode='Markdown'
+        parse_mode='Html'
     )
 
 
