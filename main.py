@@ -1,17 +1,24 @@
+import threading
+
 from telegram import Bot, BotCommand, Update, InlineKeyboardButton as BT, InlineKeyboardMarkup as MU
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 from datetime import datetime
+import time
+import holidays
 import re
 import requests
 from bs4 import BeautifulSoup
 from menu import *
 import json
 import logging
-
 import random
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+global token
+
+kr_holidays = holidays.country_holidays('KR')
 
 
 def open_token():
@@ -19,6 +26,9 @@ def open_token():
         token_data = json.load(token_file)
         return token_data['prod']
         # return token_data['dev']
+
+
+token = open_token()
 
 
 def get_weather_text(weather):
@@ -388,11 +398,114 @@ def button_callback_handler(update: Update, context: CallbackContext) -> None:
         )
 
 
+def alarm():
+    while True:
+        # Get the current time
+        now = datetime.now()
+        date = now.date()
+        current_time = time.strftime("%H:%M:%S")
+        # chat_id = '1643754742'
+        chat_id = '-854598255'
+
+        # Check if it is 11:30 AM
+        # if current_time == "11:30:00":
+        if (0 <= now.weekday() <= 4) and (current_time == "11:30:00") and date not in kr_holidays:
+            # sendMessage('-854598255')
+            message1 = f'😀<b>{current_time}</b> 데일리 점심 알람 입니다\n'
+            message2 = select_weather_menu_str()
+            message = message1+message2
+            sendMessage(chat_id, message)
+
+        # Sleep for 1 second before checking the time again
+        time.sleep(1)
+
+
+def sendMessage(chat_id, message):
+    bot = Bot(token)
+    bot.sendMessage(chat_id=chat_id, text=message, parse_mode='Html')
+
+
+def select_weather_menu_str():
+    today = datetime.today().strftime("%Y-%m-%d")
+    weather = get_weather()
+    print('weather', weather)
+    weather_txt = get_weather_text(weather)
+    temperature = weather['temperature']
+    cast = weather['cast']
+    dust = weather['dust']
+    is_bad_weather = bad_weather(cast)
+    menu_list = []
+    추가메세지 = ''
+    delivery = 2
+    if temperature < 4:
+        if is_bad_weather:
+            if dust.find('나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 3))
+                delivery = 60
+                추가메세지 = '춥고 궂은 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 3))
+                delivery = 40
+        else:
+            if dust.find('매우나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 350
+                                  and not item['temperature_category'] == 3))
+                delivery = 30
+                추가메세지 = '미세먼지 심한 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 500
+                                  and not item['temperature_category'] == 3))
+                delivery = 10
+                추가메세지 = ''
+    elif temperature > 28:
+        if is_bad_weather:
+            if dust.find('나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250))
+                delivery = 50
+                추가메세지 = '덥고 궂은 '
+            else:
+                menu_list = list((item for item in menus if item['distance'] < 350
+                                  and not item['weather_category'] == 4 and not item['temperature_category'] == 2))
+                delivery = 20
+        else:
+            if dust.find('매우나쁨') > -1:
+                menu_list = list((item for item in menus if item['distance'] < 250
+                                  and not item['temperature_category'] == 2))
+                delivery = 10
+                추가메세지 = '미세먼지 심한 '
+    else:
+        menu_list = menus
+
+    delivery_submit = random.randrange(0, 100)
+    # print('delivery', delivery)
+    # print('delivery_submit', delivery_submit)
+    if delivery_submit < delivery:
+        text = f'*********** {today} ***********\n{weather_txt}\n\n점심 알람봇이 추천 합니다.\n오늘 같은 {추가메세지}날씨엔 배달은 어떠신가요?'
+    else:
+        menu = menu_choice(menu_list)  # 랜덤으로 메뉴를 뽑는다
+        weight = menu['weight']
+        if weight < 100:  # 메뉴의 가중치가 100보다 작으면 확률 굴림을 한다
+            submit = random.randrange(0, 100)
+            if weight < submit:
+                print('승인 실패: ', menu)
+                menu = menu_choice(menu_list)  # 확률 굴림 실패시 다시 한번 랜덤으로 메뉴를 뽑는다
+        name = menu['name']
+        url = menu['url']
+        message = menu['message']
+        text = f'*********** {today} ***********\n{weather_txt}\n점심 알람봇이 추천 합니다.\n 여기 어떠신가요?\n-> {message}<b>{name}!</b>\n{url}'
+
+    return text
+
+
 def main():
-    token = open_token()
     bot = Bot(token)
     command = [BotCommand("start", "시작"), BotCommand("list", "등록된 가게 목록(등록순)")]
     bot.set_my_commands(command)
+    t = threading.Thread(target=alarm)
+    t.daemon = True
+    t.start()
 
     updater = Updater(token)
     dispatcher = updater.dispatcher
