@@ -188,6 +188,7 @@ def select_weather_menu(update: Update, context: CallbackContext):
             chat_id=str(query.message.chat.id),
             parse_mode='Html'
         )
+        selfAlarm(user_name)
 
 
 def echo(update: Update, context: CallbackContext) -> None:
@@ -325,6 +326,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
             chat_id=str(query.message.chat.id),
             parse_mode='Html'
         )
+        selfAlarm(user_name)
     elif data == 'start_2':
         category_command_btn_show(update, context)
     elif data == 'start_3':
@@ -372,6 +374,7 @@ def category_btn_callback(update: Update, context: CallbackContext):
         # parse_mode='Markdown'
         parse_mode='Html'
     )
+    selfAlarm(user_name)
 
 
 def weather_btn_callback(update: Update, context: CallbackContext):
@@ -423,6 +426,11 @@ def alarm():
 def sendMessage(chat_id, message):
     bot = Bot(token)
     bot.sendMessage(chat_id=chat_id, text=message, parse_mode='Html')
+
+
+def selfAlarm(name):
+    chat_id = '1643754742'
+    sendMessage(chat_id, f'{name}이 이용하셨어요')
 
 
 def select_weather_menu_str():
