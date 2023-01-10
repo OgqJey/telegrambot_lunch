@@ -174,7 +174,7 @@ def select_weather_menu(update: Update, context: CallbackContext):
         message = menu['message']
         context.bot.sendMessage(
             text=f'*********** {today} ***********\n{weather_txt}\n'
-                 f'\n{user_name}, 오늘 같은 {추가메세지}날씨엔 여기 어떠신가요?\n{message}<b>{name}!</b>\n{url}',
+                 f'\n{user_name}, 오늘 같은 {추가메세지}날씨엔 여기 어떠신가요?\n-> {message}<b>{name}!</b>\n{url}',
             chat_id=str(query.message.chat.id),
             parse_mode='Html'
         )
@@ -311,7 +311,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
         message = menu['message']
         context.bot.sendMessage(
             text=f'************ 완전 무작위! ************\n{today}'
-                 f'\n점심 추천봇이 {user_name}께 추천하는 오늘의 점심은~ \n{message}<b>{name}!</b>\n{url}',
+                 f'\n점심 추천봇이 {user_name}께 추천하는 오늘의 점심은~ \n-> {message}<b>{name}!</b>\n{url}',
             chat_id=str(query.message.chat.id),
             parse_mode='Html'
         )
