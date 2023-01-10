@@ -395,7 +395,7 @@ menus = [
         "distance": 319,
         "message": "분식은 어떠신가요? ",
     },
-{
+    {
         "id": 31,
         "name": "분식문방구",
         "url": "https://map.naver.com/v5/entry/place/1980277788",
@@ -405,6 +405,17 @@ menus = [
         "temperature_category": 1,
         "distance": 261 + 50,
         "message": "깔끔한 인테리어의 분식집. ",
+    },
+    {
+        "id": 32,
+        "name": "알마튜나",
+        "url": "https://map.naver.com/v5/entry/place/1625736209",
+        "weight": 60,
+        "category": 2,
+        "weather_category": 1,
+        "temperature_category": 1,
+        "distance": 310,
+        "message": "회덮밥 잘나와요. ",
     }
 ]
 
