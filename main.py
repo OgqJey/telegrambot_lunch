@@ -2,8 +2,10 @@ import threading
 
 from telegram import Bot, BotCommand, Update, InlineKeyboardButton as BT, InlineKeyboardMarkup as MU
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
-from datetime import datetime
+import datetime
 import time
+from datetime import timezone
+import pytz
 import holidays
 import re
 import requests
@@ -19,6 +21,8 @@ logger = logging.getLogger(__name__)
 global token
 
 kr_holidays = holidays.country_holidays('KR')
+# Set timezone to Korea time
+korea_tz = pytz.timezone('Asia/Seoul')
 
 
 def open_token():
@@ -110,7 +114,7 @@ def bad_weather(cast):
 def select_weather_menu(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
-    today = datetime.today().strftime("%Y-%m-%d")
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
     user_name = make_user_name(update)
     weather = get_weather()
     print('weather', weather)
@@ -310,7 +314,7 @@ def start_command_weather_show(update: Update, context: CallbackContext):
 def start_btn_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
-    today = datetime.today().strftime("%Y-%m-%d")
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
 
     # user_name = query.from_user.last_name + query.from_user.first_name
     user_name = make_user_name(update)
@@ -336,7 +340,7 @@ def start_btn_callback(update: Update, context: CallbackContext):
 def category_btn_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
-    today = datetime.today().strftime("%Y-%m-%d")
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
     # user_name = query.from_user.last_name + query.from_user.first_name
     user_name = make_user_name(update)
     category_text = ''
@@ -378,9 +382,6 @@ def category_btn_callback(update: Update, context: CallbackContext):
 
 
 def weather_btn_callback(update: Update, context: CallbackContext):
-    query = update.callback_query
-    data = query.data
-    today = datetime.today().strftime("%Y-%m-%d")
     select_weather_menu(update, context)
 
 
@@ -404,17 +405,18 @@ def button_callback_handler(update: Update, context: CallbackContext) -> None:
 def alarm():
     while True:
         # Get the current time
-        now = datetime.now()
+        now = datetime.datetime.now(tz=korea_tz)
         date = now.date()
-        current_time = time.strftime("%H:%M:%S")
+        current_time = datetime.datetime.now(tz=korea_tz).time()
+        current_time_str = current_time.strftime('%H:%M:%S')
+        alarm_time = datetime.time(hour=11, minute=30, tzinfo=korea_tz)
+        alarm_time_str = alarm_time.strftime('%H:%M:%S')
         # chat_id = '1643754742'
         chat_id = '-854598255'
 
-        # Check if it is 11:30 AM
-        # if current_time == "11:30:00":
-        if (0 <= now.weekday() <= 4) and (current_time == "11:30:00") and date not in kr_holidays:
-            # sendMessage('-854598255')
-            message1 = f'😀<b>{current_time}</b> 데일리 점심 알람 입니다\n'
+        if (0 <= now.weekday() <= 4) and (current_time_str == alarm_time_str) and date not in kr_holidays:
+            display_time = current_time_str[0:5]
+            message1 = f'⏰<b>{display_time}</b> 데일리 점심 알람 입니다\n'
             message2 = select_weather_menu_str()
             message = message1+message2
             sendMessage(chat_id, message)
@@ -434,7 +436,7 @@ def selfAlarm(name):
 
 
 def select_weather_menu_str():
-    today = datetime.today().strftime("%Y-%m-%d")
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
     weather = get_weather()
     print('weather', weather)
     weather_txt = get_weather_text(weather)
@@ -502,7 +504,7 @@ def select_weather_menu_str():
         name = menu['name']
         url = menu['url']
         message = menu['message']
-        text = f'*********** {today} ***********\n{weather_txt}\n점심 알람봇이 추천 합니다.\n 여기 어떠신가요?\n-> {message}<b>{name}!</b>\n{url}'
+        text = f'*********** {today} ***********\n{weather_txt}\n점심 알람봇이 추천 합니다.\n여기 어떠신가요?\n-> {message}<b>{name}!</b>\n{url}'
 
     return text
 
