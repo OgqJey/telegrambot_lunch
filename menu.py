@@ -107,7 +107,7 @@ menus = [
         "weather_category": 2,
         "temperature_category": 1,
         "distance": 242,
-        "message": "오랜만에 낙곱새는 어떠신가요? ",
+        "message": "낙곱새는 어떠신가요? ",
     },
     {
         "id": 5,
@@ -151,7 +151,7 @@ menus = [
         "weather_category": 4,
         "temperature_category": 1,
         "distance": 233,
-        "message": "언제나 대기가 있는 진짜 맛집! ",
+        "message": "언제나 대기가 있는 일식 돈까스 맛집! ",
     },
     {
         "id": 9,
@@ -294,7 +294,7 @@ menus = [
         "weather_category": 2,
         "temperature_category": 1,
         "distance": 32,
-        "message": "회사에서 가장 가까운 ",
+        "message": "회사에서 가장 가까운 중국집 ",
     },
     {
         "id": 22,
@@ -371,7 +371,7 @@ menus = [
         "weather_category": 1,
         "temperature_category": 1,
         "distance": 286,
-        "message": "찌개, 제육볶음, 생선구이 전부 무난한 ",
+        "message": "찌개, 제육볶음, 생선구이 전부 무난한...(현재 공사중) ",
     },
     {
         "id": 29,
@@ -416,6 +416,17 @@ menus = [
         "temperature_category": 1,
         "distance": 310,
         "message": "회덮밥 잘나와요. ",
+    },
+    {
+        "id": 33,
+        "name": "백화네부엌",
+        "url": "https://map.naver.com/v5/entry/place/1625736209",
+        "weight": 50,
+        "category": 6,
+        "weather_category": 1,
+        "temperature_category": 1,
+        "distance": 367 + 50,
+        "message": "장칼국수 맛집 ",
     }
 ]
 

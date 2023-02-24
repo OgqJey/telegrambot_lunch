@@ -295,7 +295,7 @@ def start_command_list_show(update: Update, context: CallbackContext):
         else:
             menu_list = menu_list + menus[i]['name'] + '\n'
     context.bot.sendMessage(
-        text=f'********** 등록된 가게 목록(등록순) *********\n{menu_list}',
+        text=f'********** 등록된 가게 목록(등록순) *********\n{menu_list}\n\n현재 {len(menus)} 곳이 등록 되어 있습니다',
         chat_id=str(update.message.chat.id)
     )
 
