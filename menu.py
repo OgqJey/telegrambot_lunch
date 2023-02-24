@@ -420,7 +420,7 @@ menus = [
     {
         "id": 33,
         "name": "백화네부엌",
-        "url": "https://map.naver.com/v5/entry/place/1625736209",
+        "url": "https://map.naver.com/v5/entry/place/38709080",
         "weight": 50,
         "category": 6,
         "weather_category": 1,
