@@ -371,7 +371,7 @@ menus = [
         "weather_category": 1,
         "temperature_category": 1,
         "distance": 286,
-        "message": "찌개, 제육볶음, 생선구이 전부 무난한...(현재 공사중) ",
+        "message": "찌개, 제육볶음, 생선구이 전부 무난한 ",
     },
     {
         "id": 29,
