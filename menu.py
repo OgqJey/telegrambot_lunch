@@ -98,17 +98,17 @@ menus = [
         "distance": 207,
         "message": "파김치전골 맛집, ",
     },
-    {
-        "id": 4,
-        "name": "사위식당",
-        "url": "https://map.naver.com/v5/entry/place/1701793098",
-        "weight": 70,
-        "category": 1,
-        "weather_category": 2,
-        "temperature_category": 1,
-        "distance": 242,
-        "message": "낙곱새는 어떠신가요? ",
-    },
+    # {
+    #     "id": 4,
+    #     "name": "사위식당",
+    #     "url": "https://map.naver.com/v5/entry/place/1701793098",
+    #     "weight": 70,
+    #     "category": 1,
+    #     "weather_category": 2,
+    #     "temperature_category": 1,
+    #     "distance": 242,
+    #     "message": "낙곱새는 어떠신가요? ",
+    # },
     {
         "id": 5,
         "name": "사계솔",
@@ -427,6 +427,17 @@ menus = [
         "temperature_category": 1,
         "distance": 367 + 50,
         "message": "장칼국수 맛집 ",
+    },
+    {
+        "id": 34,
+        "name": "카페비밀",
+        "url": "https://map.naver.com/v5/entry/place/1545491074",
+        "weight": 40,
+        "category": 3,
+        "weather_category": 4,
+        "temperature_category": 1,
+        "distance": 435 + 50,
+        "message": "카페지만 브런치가 잘나오는 ",
     }
 ]
 
